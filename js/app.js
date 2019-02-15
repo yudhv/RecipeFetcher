@@ -30,5 +30,5 @@ elements.searchForm.addEventListener('submit',e=>{
 })
 
 elements.searchInput.addEventListener('click',()=>{
-    elements.searchInput.;
+    elements.searchInput.select();
 })

@@ -1,27 +1,27 @@
 import Search from './models/Search';
-import elements from './views/base';
+import {elements, renderLoader} from './views/base';
 import * as searchView from './views/searchView';
 
 const state = {}
 
 async function initiateSearch() {
     // 1 - Get input
-    const query = elements.searchInput.value;
-    console.log(query);
+    state.query = searchView.getQuery();
 
     //2 - Change state 
-    state.search = new Search(query);
+    state.search = new Search(state.query);
 
     //3 - Prepare UI for update
-    elements.searchResults.innerHTML = '';
+    searchView.clearResults();
+    renderLoader(elements.searchResults);
 
     //4 - Get the results from API
     const results = await state.search.getResults();
     
     //5 - Display them in the UI
+    searchView.clearResults();
     searchView.setResults(results);
 
-    
 }
 
 elements.searchForm.addEventListener('submit',e=>{

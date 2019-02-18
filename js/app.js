@@ -1,4 +1,5 @@
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import {elements, renderLoader} from './views/base';
 import * as searchView from './views/searchView';
 
@@ -16,13 +17,17 @@ async function initiateSearch() {
     renderLoader(elements.searchResults);
 
     //4 - Get the results from API
-    const results = await state.search.getResults();
+    await state.search.getResults();
     
     //5 - Display them in the UI
     searchView.clearResults();
-    searchView.setResults(results);
+    searchView.setResults(state.search.recipes);
 
 }
+
+// const r = new Recipe('46956');
+// r.getRecipe();
+// console.log(r);
 
 elements.searchForm.addEventListener('submit',e=>{
     e.preventDefault();
@@ -31,4 +36,13 @@ elements.searchForm.addEventListener('submit',e=>{
 
 elements.searchInput.addEventListener('click',()=>{
     elements.searchInput.select();
+})
+
+elements.searchResultsPages.addEventListener('click',(e)=>{
+    const btn = e.target.closest('.btn-inline');
+    if(btn){
+        const page = parseInt(btn.dataset.goto);
+        searchView.clearResults();
+        searchView.setResults(state.search.recipes,page);
+    }
 })

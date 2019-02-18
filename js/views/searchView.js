@@ -2,16 +2,49 @@ import {elements} from './base';
 
 export const getQuery = () => elements.searchInput.value;
 
-export const setResults = (results) => {
-    results.map((result)=>{
+export const setResults = (results, page = 1, resPerPage = 10) => {
+    const start = (page - 1) * resPerPage;
+    const end = (page * resPerPage) - 1;
+    results.slice(start,end).map((result)=>{
         const htmlResult = createListHTML(result);
         elements.searchResults.insertAdjacentHTML('beforeend',htmlResult);
     });
+    setPageButtons(results.length, resPerPage, page);
 }
 
 export const clearResults = () => {
     elements.searchResults.innerHTML = '';
 }
+
+export const setPageButtons = (totalResults, resPerPage, page) => {
+    let buttonHTML;
+    let totalPages = Math.ceil(totalResults/resPerPage);
+    console.log("On page ", page);
+    if(page == 1 && totalPages > 1){
+        buttonHTML = createPageButtonHTML(page+1,'next');
+    }
+    else if(page > 1 && page < totalPages){
+        buttonHTML = `
+            ${createPageButtonHTML(page+1,'next')}
+            ${createPageButtonHTML(page-1,'prev')}
+        `;
+    }
+    else if(page === totalPages && totalPages > 1){
+        buttonHTML = createPageButtonHTML(totalPages-1, 'prev');
+    }
+    elements.searchResultsPages.innerHTML = '';
+    elements.searchResultsPages.insertAdjacentHTML('afterbegin',buttonHTML);
+    
+}
+
+const createPageButtonHTML = (page, type) => `
+    <button class="btn-inline results__btn--${type}" data-goto=${page}>
+        <svg class="search__icon">
+            <use href="img/icons.svg#icon-triangle-${type === 'prev' ? 'left' : 'right'}"></use>
+        </svg>
+        <span>Page ${page}</span>
+    </button>
+`;
 
 const getShortenedTitle = (title,limit = 18) => {
     if(title.length <= limit) return title;
@@ -22,7 +55,7 @@ const createListHTML = (result) => {
     console.log(result);
     const htmlResult = `
     <li>
-        <a class="results__link results__link--active" href="#23456">
+        <a class="results__link results__link--active" href="#${result.recipe_id}">
             <figure class="results__fig">
                 <img src=${result.image_url} alt="${getShortenedTitle(result.title)}">
             </figure>

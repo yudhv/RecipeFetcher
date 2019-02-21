@@ -25,9 +25,24 @@ async function initiateSearch() {
 
 }
 
-// const r = new Recipe('46956');
-// r.getRecipe();
-// console.log(r);
+async function initiateRecipe(){
+    //1 - Get input
+    const hash = window.location.hash.replace('#','');
+
+    //2 - Change state
+    state.recipe = new Recipe(hash);
+    window.r = state.recipe;
+
+    //3 - Prepare UI for update
+
+
+    //4 - Make the API call
+    await state.recipe.getRecipe();
+
+    //5 Display result
+    console.log(state.recipe);
+
+}
 
 elements.searchForm.addEventListener('submit',e=>{
     e.preventDefault();
@@ -45,4 +60,9 @@ elements.searchResultsPages.addEventListener('click',(e)=>{
         searchView.clearResults();
         searchView.setResults(state.search.recipes,page);
     }
-})
+});
+window.addEventListener('hashchange',initiateRecipe);
+window.addEventListener('load',() => {
+    elements.searchInput.value = 'pizza';
+    initiateSearch();
+});

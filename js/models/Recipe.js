@@ -23,4 +23,55 @@ export default class Recipe {
         this.servings = 4;
     }
     
+    parseIngredients(){
+        const unitsLong = ['tablespoons','tablespoon','ounces','ounce','teaspoons','teaspoon','cups','pounds'];
+        const unitsShort = ['tbsp','tbsp','oz','oz','tsp','tsp','cup','lb'];
+
+        const newIngredients = this.ingredients.map(el => {
+            let ingredient = el.toLowerCase();
+
+            // 1 -> Uniform units
+            unitsLong.forEach((unit,index) => {
+                ingredient = ingredient.replace(unit,unitsShort[index]);
+            });
+
+            // 2 -> Remove paranthesis
+            ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
+
+            // 3 -> Get value of each ingredient
+            let arrIng = ingredient.split(' ');
+            let unitIndex = arrIng.findIndex(el => unitsShort.includes(el));
+            let objIng = {};
+
+            if(unitIndex > -1){
+                let count = eval(arrIng.slice(0,unitIndex).join('+'));
+                objIng = {
+                    count,
+                    unit: arrIng[unitIndex],
+                    ingredient: arrIng.slice(unitIndex+1).join(' ')
+                };
+            }
+            else if(parseInt(arrIng[0],10)){
+                objIng = {
+                    count: parseInt(arrIng[0],10),
+                    units: "",
+                    ingredient: arrIng.slice(1).join(' ')
+                };
+            }
+            else if(unitIndex === -1){
+                objIng = {
+                    count: 1,
+                    units: "",
+                    ingredient: arrIng.join(' ')
+                };
+            }
+            
+            return objIng;
+        })
+        this.ingredients = newIngredients;
+
+        
+        
+    }
+    
 }

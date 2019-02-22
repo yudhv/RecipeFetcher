@@ -2,6 +2,8 @@ import Search from './models/Search';
 import Recipe from './models/Recipe';
 import {elements, renderLoader} from './views/base';
 import * as searchView from './views/searchView';
+import * as recipeView from './views/recipeView';
+
 
 const state = {}
 
@@ -34,14 +36,19 @@ async function initiateRecipe(){
     window.r = state.recipe;
 
     //3 - Prepare UI for update
-
+    recipeView.clearRecipe();
+    renderLoader(elements.recipe);
 
     //4 - Make the API call
     await state.recipe.getRecipe();
+    state.recipe.calcTime();
+    state.recipe.calcServings();
+    state.recipe.parseIngredients();
 
     //5 Display result
-    console.log(state.recipe);
-
+    recipeView.clearRecipe();
+    recipeView.setRecipe(state.recipe);
+    
 }
 
 elements.searchForm.addEventListener('submit',e=>{

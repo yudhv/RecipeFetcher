@@ -19,7 +19,6 @@ export const clearResults = () => {
 export const setPageButtons = (totalResults, resPerPage, page) => {
     let buttonHTML;
     let totalPages = Math.ceil(totalResults/resPerPage);
-    console.log("On page ", page);
     if(page == 1 && totalPages > 1){
         buttonHTML = createPageButtonHTML(page+1,'next');
     }
@@ -52,10 +51,9 @@ const getShortenedTitle = (title,limit = 18) => {
 }
 
 const createListHTML = (result) => {
-    console.log(result);
     const htmlResult = `
     <li>
-        <a class="results__link results__link--active" href="#${result.recipe_id}">
+        <a class="results__link " href="#${result.recipe_id}">
             <figure class="results__fig">
                 <img src=${result.image_url} alt="${getShortenedTitle(result.title)}">
             </figure>

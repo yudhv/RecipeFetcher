@@ -36,6 +36,14 @@ export const setPageButtons = (totalResults, resPerPage, page) => {
     
 }
 
+export const highlightSelected = (hash) => {
+    // Remove all previous highlights
+    const allHighlights = Array.from(document.querySelectorAll(".results__link"));
+    allHighlights.forEach(el => el.classList.remove('results__link--active'));
+    
+    document.querySelector(`a[href="#${hash}"]`).classList.add('results__link--active');
+}
+
 const createPageButtonHTML = (page, type) => `
     <button class="btn-inline results__btn--${type}" data-goto=${page}>
         <svg class="search__icon">

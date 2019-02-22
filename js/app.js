@@ -31,23 +31,26 @@ async function initiateRecipe(){
     //1 - Get input
     const hash = window.location.hash.replace('#','');
 
-    //2 - Change state
-    state.recipe = new Recipe(hash);
-    window.r = state.recipe;
-
-    //3 - Prepare UI for update
-    recipeView.clearRecipe();
-    renderLoader(elements.recipe);
-
-    //4 - Make the API call
-    await state.recipe.getRecipe();
-    state.recipe.calcTime();
-    state.recipe.calcServings();
-    state.recipe.parseIngredients();
-
-    //5 Display result
-    recipeView.clearRecipe();
-    recipeView.setRecipe(state.recipe);
+    if(hash){
+        //2 - Change state
+        state.recipe = new Recipe(hash);
+        window.r = state.recipe;
+    
+        //3 - Prepare UI for update
+        searchView.highlightSelected(hash);
+        recipeView.clearRecipe();
+        renderLoader(elements.recipe);
+    
+        //4 - Make the API call
+        await state.recipe.getRecipe();
+        state.recipe.calcTime();
+        state.recipe.calcServings();
+        state.recipe.parseIngredients();
+    
+        //5 Display result
+        recipeView.clearRecipe();
+        recipeView.setRecipe(state.recipe);
+    }
     
 }
 
@@ -70,6 +73,5 @@ elements.searchResultsPages.addEventListener('click',(e)=>{
 });
 window.addEventListener('hashchange',initiateRecipe);
 window.addEventListener('load',() => {
-    elements.searchInput.value = 'pizza';
-    initiateSearch();
+    initiateRecipe();
 });

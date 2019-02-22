@@ -46,7 +46,7 @@ export default class Recipe {
             if(unitIndex > -1){
                 let count = eval(arrIng.slice(0,unitIndex).join('+'));
                 objIng = {
-                    count,
+                    count: count%1 === 0 ? count : count.toFixed(2),
                     unit: arrIng[unitIndex],
                     ingredient: arrIng.slice(unitIndex+1).join(' ')
                 };

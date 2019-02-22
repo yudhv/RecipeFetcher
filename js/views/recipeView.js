@@ -15,7 +15,7 @@ const ingredientHTML = (ingredients) => ingredients.map(ing => `
         </svg>
         <div class="recipe__count">${ing.count}</div>
         <div class="recipe__ingredient">
-            <span class="recipe__unit">${ing.unit}</span>
+            <span class="recipe__unit">${ing.unit ? ing.unit : ""}</span>
             ${ing.ingredient}
         </div>
     </li>
